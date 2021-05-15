@@ -27,7 +27,9 @@ def main():
             WORKSHEET = WORKBOOK.add_worksheet()
             
             bold = WORKBOOK.add_format({'bold' : True})
-            
+
+            WORKSHEET.set_column(1, 1, 35)
+            WORKSHEET.set_column(2, 5, 25)
             WORKSHEET.write(0, 0, "Id Number", bold)
             WORKSHEET.write(0, 1, "Company", bold)
             WORKSHEET.write(0, 2, "County", bold)
@@ -82,7 +84,8 @@ def main():
 
                     try:
                         # If there are water rights on the page, . .
-                        waterRights = driver.find_element_by_xpath("//table[3]/tbody/tr")
+                        #/html/body/div[4]/form/table[3]/tbody/tr[7]
+                        waterRights = driver.find_elements_by_xpath("//table[3]/tbody/tr[6]/following-sibling::tr")
                         
                         WORKSHEET.write(index + 1, 1, "Right ID", bold)
                         WORKSHEET.write(index + 1, 2, "Right Status", bold)
@@ -91,28 +94,33 @@ def main():
                         WORKSHEET.write(index + 1, 5, "Source", bold)
                         
                         # . . . write the related information in an indented block underneath the company entry in the Excel spreadsheet.
-                        # TODO - Rows are being taken correctly but getting subelements is not; do additional reading.
+                        # TODO - First row is being copied repeatedly
                         for jndex, right in enumerate(waterRights):
-                            rightNumber = right.find_element_by_xpath("//td[2]/a")
-                            rightStatus = right.find_element_by_xpath("//td[4]/span")
-                            rightQuantity = right.find_element_by_xpath("//td[6]")
-                            rightFlow = right.find_element_by_xpath("//td[7]")
-                            rightSource = right.find_element_by_xpath("//td[8]")
+                            try:
+                                rightNumber = right.find_element_by_xpath("//td[2]/a").text
+                                rightStatus = right.find_element_by_xpath("//td[4]/span").text
+                                rightQuantity = right.find_element_by_xpath("//td[6]").text
+                                rightFlow = right.find_element_by_xpath("//td[7]").text
+                                rightSource = right.find_element_by_xpath("//td[8]").text
+
+                                WORKSHEET.write(index + 2 + jndex, 1, rightNumber)
+                                WORKSHEET.write(index + 2 + jndex, 2, rightStatus)
+                                WORKSHEET.write(index + 2 + jndex, 3, rightQuantity)
+                                WORKSHEET.write(index + 2 + jndex, 4, rightFlow)
+                                WORKSHEET.write(index + 2 + jndex, 5, rightSource)
+
+                                # CLicks link and opens water right window.
+                                right.find_element_by_xpath("//td[2]/a").click()
+                                driver.switch_to.window(driver.window_handles[2])
+                                
+                                # TODO - Write code to collect info from new window.
+                                time.sleep(2)
+                                
+                                driver.close()
+                                driver.switch_to.window(driver.window_handles[1])
+                            except:
+                                continue
                             
-                            WORKSHEET.write(index + 2 + jndex, 1, rightNumber)
-                            WORKSHEET.write(index + 2 + jndex, 2, rightStatus)
-                            WORKSHEET.write(index + 2 + jndex, 3, rightQuantity)
-                            WORKSHEET.write(index + 2 + jndex, 4, rightFlow)
-                            WORKSHEET.write(index + 2 + jndex, 5, rightSource)
-                            
-                            time.sleep(2)
-                            
-                            rightLink = right.find_element_by_xpath("//td[2]/a").get_attribute("onclick")
-                            driver.execute_script("arguments[0];", rightLink)
-                            driver.switch_to.window(driver.window_handles[2])
-                            
-                            time.sleep(2)
-                        
                         index += len(waterRights) + 3
                     except:
                         index += 3
@@ -126,7 +134,8 @@ def main():
                     pass
 
         finally:
-            # After everything is done, close and save the .xlsx file and close the browser.
+            # After everything is done, close and save the .xlsx file to the
+            # same directory and close the browser.
             WORKBOOK.close()
             driver.quit()
             
