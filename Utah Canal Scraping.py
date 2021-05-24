@@ -1,5 +1,6 @@
 """
-Created on Thu May  6 11:50:23 2021
+Created on Sun May 23 17:43:44 2021
+
 @author: vivian
 """
 
@@ -32,6 +33,9 @@ def main():
             WORKSHEET.set_column(0, 0, 15)
             WORKSHEET.set_column(1, 1, 35)
             WORKSHEET.set_column(2, 5, 25)
+            WORKSHEET.set_column(6, 6, 60)
+            WORKSHEET.set_column(7, 7, 60)
+            WORKSHEET.set_column(8, 8, 100)
             
             # Open main page and pull URLs from the main table whose 
             # corresponding entry lists Uintah as the county.
@@ -88,15 +92,16 @@ def main():
 
                     try:
                         # If there are water rights on the page, . .
-                        #/html/body/div[4]/form/table[3]/tbody/tr[7]
                         waterRights = driver.find_elements_by_xpath("//table[3]/tbody/tr[td[2]/a]")
                         
                         WORKSHEET.write(offset + 1, 1, "Right ID", bold)
                         WORKSHEET.write(offset + 1, 2, "Right Status", bold)
-                        WORKSHEET.write(offset + 1, 3, "Quantity (cfs)", bold)
-                        WORKSHEET.write(offset + 1, 4, "Flow (acre-feet)", bold)
-                        WORKSHEET.write(offset + 1, 5, "Source", bold)
-                        WORKSHEET.write(offset + 1, 6, "Points of Diversion", bold)
+                        WORKSHEET.write(offset + 1, 3, "Priority Date", bold)
+                        WORKSHEET.write(offset + 1, 4, "Quantity (acft)", bold)
+                        WORKSHEET.write(offset + 1, 5, "Flow (cfs)", bold)
+                        WORKSHEET.write(offset + 1, 6, "Source", bold)
+                        WORKSHEET.write(offset + 1, 7, "Points of Diversion", bold)
+                        WORKSHEET.write(offset + 1, 8, "Document Link", bold)
                         
                         # . . . write the related information in an indented block underneath the company entry in the Excel spreadsheet.
                         for jndex, right in enumerate(waterRights):
@@ -108,14 +113,17 @@ def main():
                                     rightStatus = right.find_element_by_xpath("./td[4]/span").text
                                     WORKSHEET.write(offset + 2 + jndex, 2, rightStatus)
                                 
-                                    rightQuantity = right.find_element_by_xpath("./td[6]")
-                                    WORKSHEET.write(offset + 2 + jndex, 3, rightQuantity.text)
-                        
-                                    rightFlow = right.find_element_by_xpath("./td[7]")
-                                    WORKSHEET.write(offset + 2 + jndex, 4, rightFlow.text)
+                                    rightDate = right.find_element_by_xpath("./td[5]").text
+                                    WORKSHEET.write(offset + 2 + jndex, 3, rightDate)
                                     
-                                    rightSource = right.find_element_by_xpath("./td[8]")
-                                    WORKSHEET.write(offset + 2 + jndex, 5, rightSource.text)
+                                    rightQuantity = right.find_element_by_xpath("./td[6]").text
+                                    WORKSHEET.write(offset + 2 + jndex, 4, rightQuantity)
+                        
+                                    rightFlow = right.find_element_by_xpath("./td[7]").text
+                                    WORKSHEET.write(offset + 2 + jndex, 5, rightFlow)
+                                    
+                                    rightSource = right.find_element_by_xpath("./td[8]").text
+                                    WORKSHEET.write(offset + 2 + jndex, 6, rightSource)
                                 except:
                                     pass
 
@@ -126,10 +134,41 @@ def main():
                                 
                                 # TODO - Write code to collect info in the instance there are
                                 # multiple diversion points.
-                                    time.sleep(2)
-                                    diversionPoint = WebDriverWait(driver, 120).until(ec.presence_of_element_located((By.XPATH,"//tbody/tr[7]/td[2]/a" )))
-                                    WORKSHEET.write(offset + 2 + jndex, 6, diversionPoint.text)
+                                    
+                                    wait = WebDriverWait(driver, 120).until(ec.presence_of_element_located((By.XPATH, "//table")))
+                                    try:
+                                        diversionPoints = driver.find_elements_by_xpath("//div[6]/table/tbody/*/td[@class = 'tblData']/a")
+                                        string = ""
+                                        for points in diversionPoints:        
+                                            string += points.text + " "
+                                        WORKSHEET.write(offset + 2 + jndex, 7, string)
+                                    except:
+                                        # diversionPoint =
+                                        # WORKSHEET.write(offset + 2 + jndex, 7, diversionPoint)
+                                        pass
+
+                                    dropdown = driver.find_element_by_xpath("//select[@id = 'related']/option[2]").get_attribute("value")
+                                    driver.execute_script("window.open(arguments[0]);", dropdown)
+                                    driver.switch_to.window(driver.window_handles[3])
+                                    try:
+                                        driver.find_element_by_xpath("//button[@type = 'submit']").click()
+                                        driver.find_element_by_xpath("//button[@accesskey = 'P']").click()
+                                    
+                                        driver.switch_to.window(driver.window_handles[4])
+                                        WORKSHEET.write(offset + 2 + jndex, 8, driver.current_url)
+                                        driver.close()
+                                        driver.switch_to.window(driver.window_handles[3])
+                                    except:
+                                        WORKSHEET.write(offset + 2 + jndex, 8, "No Documents")
+                                        driver.close()
+                                        driver.switch_to.window(driver.window_handles[3])
+                                        pass
+                                        
                                     driver.close()
+                                    
+                                    driver.switch_to.window(driver.window_handles[2])
+                                    driver.close()
+                                    
                                     driver.switch_to.window(driver.window_handles[1])
                                 except:
                                     driver.switch_to.window(driver.window_handles[2])
