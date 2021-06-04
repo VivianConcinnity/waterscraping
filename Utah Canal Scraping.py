@@ -24,9 +24,16 @@ PATH = "C:\Program Files (x86)\chromedriver.exe"
 def main():
     with webdriver.Chrome(PATH) as driver:
         try:
-            # Setup an Excel .xlsx file and bold format information.
+            # Setup an Excel .xlsx file and formatting information.
             WORKBOOK = xlsx.Workbook("Utah Water Info Worksheet.xlsx")
-            bold = WORKBOOK.add_format({'bold' : True})
+            companyHeader = WORKBOOK.add_format({'bold' : True, 'bg_color' : '#E6917C'})
+            rightHeader = WORKBOOK.add_format({'bold' : True, 'bg_color' : '#5D88F5'})
+            linkHeader = WORKBOOK.add_format({'bold' : True, 'bg_color' : '#7CE68A'})
+            
+            companyFormat = WORKBOOK.add_format({'bg_color' : '#E6917C'})
+            rightFormat = WORKBOOK.add_format({'bg_color' : '#5D88F5'})
+            tableFormat = WORKBOOK.add_format({'bg_color' : '#82BAFF'})
+            linkFormat = WORKBOOK.add_format({'bg_color' : '#7CE68A'})
 
             # Open main page and pull company URLs from the main table whose 
             # entry lists the county as Uintah.
@@ -47,11 +54,11 @@ def main():
                 WORKSHEET[index].set_column(7, 7, 60)
                 WORKSHEET[index].set_column(8, 8, 100)
                 
-                WORKSHEET[index].write(0, 0, "Id Number", bold)
-                WORKSHEET[index].write(0, 1, "Company", bold)
-                WORKSHEET[index].write(0, 2, "County", bold)
-                WORKSHEET[index].write(0, 3, "Water Source", bold)
-                WORKSHEET[index].write(0, 4, "Water Right Area", bold)
+                WORKSHEET[index].write(0, 0, "Id Number", companyHeader)
+                WORKSHEET[index].write(0, 1, "Company", companyHeader)
+                WORKSHEET[index].write(0, 2, "County", companyHeader)
+                WORKSHEET[index].write(0, 3, "Water Source", companyHeader)
+                WORKSHEET[index].write(0, 4, "Water Right Area", companyHeader)
                 
                 companyId = box.text
                 WORKSHEET[index].write(1, 0, companyId)
@@ -64,22 +71,22 @@ def main():
                 # Records company information to it's corresponding worksheet.
                 try:
                     companyName = driver.find_element_by_xpath("//input[@id='oldCompanyNameId']").get_attribute("value")
-                    WORKSHEET[index].write(1, 1,companyName)
+                    WORKSHEET[index].write(1, 1,companyName, companyFormat)
                 except:
                     pass
                 try:
                     companyCounty = driver.find_element_by_xpath("//input[@name='countyName']").get_attribute("value")
-                    WORKSHEET[index].write(1, 2, companyCounty)
+                    WORKSHEET[index].write(1, 2, companyCounty, companyFormat)
                 except:
                     pass    
                 try:
                     companySource = driver.find_element_by_xpath("//input[@id='sourceSaveId']").get_attribute("value")
-                    WORKSHEET[index].write(1, 3, companySource)
+                    WORKSHEET[index].write(1, 3, companySource, companyFormat)
                 except:
                     pass
                 try:
                     companyArea = driver.find_element_by_xpath("//table[1]/tbody/tr[11]/td[2]").text
-                    WORKSHEET[index].write(1, 4, companyArea)
+                    WORKSHEET[index].write(1, 4, companyArea, companyFormat)
                 except:
                     pass
                 
@@ -87,12 +94,12 @@ def main():
                 try:
                     waterRights = driver.find_elements_by_xpath("//table[3]/tbody/tr[td[2]/a]")
                         
-                    WORKSHEET[index].write(2, 1, "Right ID", bold)
-                    WORKSHEET[index].write(2, 2, "Right Status", bold)
-                    WORKSHEET[index].write(2, 3, "Priority Date", bold)
-                    WORKSHEET[index].write(2, 4, "Quantity (acft)", bold)
-                    WORKSHEET[index].write(2, 5, "Flow (cfs)", bold)
-                    WORKSHEET[index].write(2, 6, "Source", bold)
+                    WORKSHEET[index].write(2, 1, "Right ID", rightHeader)
+                    WORKSHEET[index].write(2, 2, "Right Status", rightHeader)
+                    WORKSHEET[index].write(2, 3, "Priority Date", rightHeader)
+                    WORKSHEET[index].write(2, 4, "Quantity (acft)", rightHeader)
+                    WORKSHEET[index].write(2, 5, "Flow (cfs)", rightHeader)
+                    WORKSHEET[index].write(2, 6, "Source", rightHeader)
                 except:
                     pass
                 
@@ -102,22 +109,22 @@ def main():
                     
                     # Writes water right info to worksheet.
                     rightNumber = right.find_element_by_xpath("./td[2]/a").text
-                    WORKSHEET[index].write(3 + rightIndex + offset, 1, rightNumber)
+                    WORKSHEET[index].write(3 + rightIndex + offset, 1, rightNumber, rightFormat)
   
                     rightStatus = right.find_element_by_xpath("./td[4]/span").text
-                    WORKSHEET[index].write(3 + rightIndex + offset, 2, rightStatus)
+                    WORKSHEET[index].write(3 + rightIndex + offset, 2, rightStatus, rightFormat)
 
                     rightDate = right.find_element_by_xpath("./td[5]").text
-                    WORKSHEET[index].write(3 + rightIndex + offset, 3, rightDate)
+                    WORKSHEET[index].write(3 + rightIndex + offset, 3, rightDate, rightFormat)
 
                     rightQuantity = right.find_element_by_xpath("./td[6]").text
-                    WORKSHEET[index].write(3 + rightIndex + offset, 4, rightQuantity)
+                    WORKSHEET[index].write(3 + rightIndex + offset, 4, rightQuantity, rightFormat)
 
                     rightFlow = right.find_element_by_xpath("./td[7]").text
-                    WORKSHEET[index].write(3 + rightIndex + offset, 5, rightFlow)
+                    WORKSHEET[index].write(3 + rightIndex + offset, 5, rightFlow, rightFormat)
                                     
                     rightSource = right.find_element_by_xpath("./td[8]").text
-                    WORKSHEET[index].write(3 + rightIndex + offset, 6, rightSource)
+                    WORKSHEET[index].write(3 + rightIndex + offset, 6, rightSource, rightFormat)
                         
                     # Opens water right link.
                     right.find_element_by_xpath("./td[2]/a").click()
@@ -143,17 +150,18 @@ def main():
                                 try:
                                     textEntry = entry.find_element_by_xpath("./*").text
                                     if not str.isspace(textEntry):
-                                        WORKSHEET[index].write(4 + rightIndex + offset, 2 + columnIndex, textEntry)
+                                        WORKSHEET[index].write(4 + rightIndex + offset, 2 + columnIndex, textEntry, tableFormat)
                                 except:
                                     try:
                                         textEntry = entry.text
                                         if not str.isspace(textEntry):
-                                            WORKSHEET[index].write(4 + rightIndex + offset, 2 +columnIndex, textEntry)
+                                            WORKSHEET[index].write(4 + rightIndex + offset, 2 + columnIndex, textEntry, tableFormat)
                                     except:
+                                        WORKSHEET[index].write(4 + rightIndex + offset, 2 + columnIndex, '', tableFormat)
                                         pass
                             offset += 1
                     else:
-                        WORKSHEET[index].write(4 + rightIndex + offset, 2, "No Table")
+                        WORKSHEET[index].write(4 + rightIndex + offset, 2, "No Table", tableFormat)
                         offset += 1
                     
                     # Selects and open 'Related Documents' option.
@@ -169,8 +177,8 @@ def main():
                                     
                         driver.switch_to.window(driver.window_handles[4])
                         
-                        WORKSHEET[index].write(4 + rightIndex + offset, 2, "Document Link", bold)
-                        WORKSHEET[index].write(4 + rightIndex + offset, 3, driver.current_url)
+                        WORKSHEET[index].write(4 + rightIndex + offset, 2, "Document Link", linkHeader)
+                        WORKSHEET[index].write(4 + rightIndex + offset, 3, driver.current_url, linkFormat)
                         offset += 1
                         
                         driver.close()
