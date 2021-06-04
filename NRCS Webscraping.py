@@ -48,11 +48,6 @@ def main():
                     "//select[@name = 'format']/option[@value = 'copy']"
                     ).click()
                 
-                # Selects Current Calendar year.
-                driver.find_element_by_xpath(
-                    "//select[@name = 'interval']/option[@value = 'YEAR']"
-                    ).click()
-                
                 # Selects Historic Calendar year.
                 driver.find_element_by_xpath(
                     "//select[@name = 'month']/option[@value = 'CY']"
@@ -73,15 +68,6 @@ def main():
                             driver.find_element_by_xpath(
                                 "//input[@class = 'scanReportButtonGreen']"
                                 ).click()
-                
-                # Downloads required Current calendar year report.
-                for option in reportContent:
-                    # Checks if current option is an unwanted option.
-                    if not ((option.get_attribute("value") in ["ALL"]) or (option.text == "===Individual elements===")):                
-                        option.click()
-                        driver.find_element_by_xpath(
-                            "//input[@class = 'scanReportButtonGold']"
-                            ).click()
                 
                 # Closes current site.
                 driver.close()
