@@ -141,7 +141,6 @@ def main():
                         pass
                     
                     if table != None:
-                        
                         # Writes crude copy of table underneath it's corresponding
                         # water right entry in worksheet.
                         for tableRow in table:
@@ -150,14 +149,18 @@ def main():
                                 try:
                                     textEntry = entry.find_element_by_xpath("./*").text
                                     if not str.isspace(textEntry):
-                                        WORKSHEET[index].write(4 + rightIndex + offset, 2 + columnIndex, textEntry, tableFormat)
+                                        WORKSHEET[index].write(3 + rightIndex + offset, 2 + columnIndex, textEntry, tableFormat)
+                                    else:
+                                        WORKSHEET[index].write(3 + rightIndex + offset, 2 + columnIndex, '', tableFormat)
                                 except:
                                     try:
                                         textEntry = entry.text
                                         if not str.isspace(textEntry):
-                                            WORKSHEET[index].write(4 + rightIndex + offset, 2 + columnIndex, textEntry, tableFormat)
+                                            WORKSHEET[index].write(3 + rightIndex + offset, 2 + columnIndex, textEntry, tableFormat)
+                                        else:
+                                            WORKSHEET[index].write(3 + rightIndex + offset, 2 + columnIndex, '', tableFormat)
                                     except:
-                                        WORKSHEET[index].write(4 + rightIndex + offset, 2 + columnIndex, '', tableFormat)
+                                        WORKSHEET[index].write(3 + rightIndex + offset, 2 + columnIndex, '', tableFormat)
                                         pass
                             offset += 1
                     else:
