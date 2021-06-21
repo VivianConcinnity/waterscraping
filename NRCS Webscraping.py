@@ -19,6 +19,10 @@ import time
 # Download the Chrome webdriver at https://chromedriver.chromium.org/downloads
 PATH = "C:\Program Files (x86)\chromedriver.exe"
 
+# Time to let downloads finish downloading at the end of the program.
+# Adjust time as needed according to download speed.
+DOWNLOAD_WAIT = 30
+
 # NRCS sites to navigate to.
 # Add or remove links as needed.
 URLS = ["https://wcc.sc.egov.usda.gov/nwcc/site?sitenum=833", "https://wcc.sc.egov.usda.gov/nwcc/site?sitenum=559"]
@@ -34,8 +38,9 @@ def main():
                 driver.switch_to.window(driver.window_handles[1])
                 
                 # Selects list of options for report content and for historic year.
-                # "wait(driver, 120)" is used to give time for every element to load.
-                reportContent = wait(driver, 120).until(lambda d: d.find_elements_by_xpath("//select[@name = 'report']/option")) 
+                reportContent = wait(driver, 120).until(
+                    lambda d: d.find_elements_by_xpath("//select[@name = 'report']/option")
+                    ) 
                 historicYears = driver.find_elements_by_xpath("//select[@name = 'year']/option")
                 
                 # Selects daily option for Time Series.
@@ -75,9 +80,9 @@ def main():
             
         finally:
             # Waits a set time to allow downloads to finish, then closes the browser.
-            # Adjust time if needed according to download speed.
-            time.sleep(30)
+            time.sleep(DOWNLOAD_WAIT)
             driver.quit()
             
 
+# Runs the program.
 main()
