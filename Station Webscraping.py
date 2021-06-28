@@ -23,12 +23,19 @@ import xlsxwriter as xlsx
 # Download the Chrome webdriver at https://chromedriver.chromium.org/downloads
 PATH = "C:\Program Files (x86)\chromedriver.exe"
 
+# THe URL to the system page on the Utah Division of Water Rights system.
+# Change the URL to another system's page as required.
+SYSTEM_URL = "https://www.waterrights.utah.gov/distribution/WaterRecords.asp?system_name=ASHLEY%20CREEK"
+
+# The name of the saved Excel .xlsx file.
+# Change to a name you want the file to be named.
+FILE_NAME = "Station Distribution Records.xlsx"
 
 def main():
     with webdriver.Chrome(PATH) as driver:
         try:
             # Opens distribution water records page.
-            driver.get("https://www.waterrights.utah.gov/distribution/WaterRecords.asp?system_name=ASHLEY%20CREEK")
+            driver.get(SYSTEM_URL)
             
             # Pulls entries from table.
             stationEntries = wait(driver, 120).until(
@@ -38,7 +45,7 @@ def main():
             
                 
             # Sets up Excel spreadsheet with appropriate number of sheets.
-            WORKBOOK = xlsx.Workbook("Station Distribution Records.xlsx")
+            WORKBOOK = xlsx.Workbook(FILE_NAME)
             WORKSHEET = [None for _ in range(len(stationEntries))]
             
             # Sets up cell formatting options.
@@ -168,7 +175,6 @@ def main():
                 driver.switch_to.window(driver.window_handles[0])
         finally:
             # After everything is done, close the browser.
-            print(driver.current_url)
             WORKBOOK.close()
             driver.quit()
             
