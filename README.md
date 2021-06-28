@@ -84,6 +84,3 @@ Add or remove SNOTEL site URLs to the array that you want to download reports fr
 
 The `DOWNLOAD_WAIT` variable is used to make the program wait at the end of execution to allow all the files to download.
 Change the number as needed to give the program enough time for all the files to download; the exact number will depend on the strength of the Wi-Fi signal the computer the code is running on. A poor connection will require a larger number to wait for all files to download; a faster connection can use a smaller number to make the program terminate faster (though, in either case, it's best to err on using a larger number to allow time for all files to download).
-
-The `FILE_NAME` variable is the name of the .xlsx file saved to the same directory as the Python file.
-Change the variable to the desired name you want to save the .xlsx file under.
