@@ -24,11 +24,15 @@ PATH = "C:\Program Files (x86)\chromedriver.exe"
 # Name of desired county to pull canal info from.
 COUNTY_NAME = 'Uintah'
 
+# The name of the saved Excel .xlsx file.
+# Change to a name you want the file to be named.
+FILE_NAME = "Utah Water Info Worksheet.xlsx"
+
 def main():
     with webdriver.Chrome(PATH) as driver:
         try:
             # Setup an Excel .xlsx file and formatting information.
-            WORKBOOK = xlsx.Workbook("Utah Water Info Worksheet.xlsx")
+            WORKBOOK = xlsx.Workbook(FILE_NAME)
             companyHeader = WORKBOOK.add_format({'bold' : True, 'bg_color' : '#E6917C'})
             rightHeader = WORKBOOK.add_format({'bold' : True, 'bg_color' : '#5D88F5'})
             linkHeader = WORKBOOK.add_format({'bold' : True, 'bg_color' : '#7CE68A'})
