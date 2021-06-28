@@ -21,6 +21,9 @@ import xlsxwriter as xlsx
 # Download the Chrome webdriver at https://chromedriver.chromium.org/downloads
 PATH = "C:\Program Files (x86)\chromedriver.exe"
 
+# Name of desired county to pull canal info from.
+COUNTY_NAME = 'Uintah'
+
 def main():
     with webdriver.Chrome(PATH) as driver:
         try:
@@ -38,7 +41,7 @@ def main():
             # Open main page and pull company URLs from the main table whose 
             # entry lists the county as Uintah.
             driver.get("https://waterrights.utah.gov/canalinfo/canal_owners.asp")
-            urlBoxes = driver.find_elements_by_xpath("//tr[td[3]/font[contains(., 'Uintah')]]/td[1]/font/a")
+            urlBoxes = driver.find_elements_by_xpath("//tr[td[3]/font[contains(., '" + COUNTY_NAME + "')]]/td[1]/font/a")
             
             # Sets up worksheets in the Excel file for every company.
             WORKSHEET = [None for _ in range(len(urlBoxes))]
