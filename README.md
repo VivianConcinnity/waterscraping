@@ -6,7 +6,7 @@ Each program runs a Selenium driver and navigates to a variety of government web
 
 At the top of every Python file (after the importing of packages) are various variables whose names are in all-caps. These variables are parameters, and they can be changed safely to change the behaviour of the program.
 
-## Utah Canal Scraping
+## Utah Canal Scraping.py
 
 The `Utah Canal Scraping.py` file is used to pull certain water canal information from the [Utah Division of Water Rights](https://waterrights.utah.gov/canalinfo/canal_owners.asp) site and writes it to an Excel .xlsx file. This data includes:
 
@@ -36,7 +36,7 @@ Currently, the program is pulling info from the Uintah county's canals.
 The `FILE_NAME` variable is the name of the .xlsx file saved to the same directory as the Python file.
 Change the variable to the desired name you want to save the .xlsx file under.
 
-## Station Webscraping
+## Station Webscraping.py
 
 The `Station Webscraping.py` file navigates to the [Ashley Creek system page](https://www.waterrights.utah.gov/distribution/WaterRecords.asp?system_name=ASHLEY%20CREEK) on the Utah Division of Water Rights site, pulls information from each station in the Ashley Creek system, and writes it to a spreadsheet in an Excel .xlsx file. This data includes:
 
@@ -57,7 +57,7 @@ Currently, the program is pulling info from the Ashley Creek system.
 The `FILE_NAME` variable is the name of the .xlsx file saved to the same directory as the Python file.
 Change the variable to the desired name you want to save the .xlsx file under.
 
-## NRCS Webscraping
+## NRCS Webscraping.py
 
 The `NRCS Webscraping.py` file navigates to the [Kings Cabin](https://wcc.sc.egov.usda.gov/nwcc/site?sitenum=559) and [Trout Creek](https://wcc.sc.egov.usda.gov/nwcc/site?sitenum=833) website on the Natural Resources Conservation Service website and automatically downloads all daily calendar-year .csv report files from the website.
 
