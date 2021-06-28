@@ -51,7 +51,7 @@ The `Station Webscraping.py` file navigates to the [Ashley Creek system page](ht
 The `PATH` variable is the directory path to the Chrome webdriver file on the computer the Python file is run on. Change this variable to the appropriate directory where the `chromedriver.exe` file is downloaded to.
 
 The `SYSTEM_URL` variable is the system page's URL to which the program navigates to.
-Change the URL to another valid system page URL from the same website to pull info for a different county.
+Change the URL to another valid system page URL from the same website to pull info for a different distribution system.
 Currently, the program is pulling info from the Ashley Creek system.
 
 The `FILE_NAME` variable is the name of the .xlsx file saved to the same directory as the Python file.
