@@ -2,7 +2,7 @@
 
 This repository holds three files that were used to collect information on water rights and water canals in the Utah area from various websites. The code is provided for transparency, and this document is provided to give some insight as to how the code works and what parameters can be modified.
 
-Each program runs a Selenium driver and navigates to a variety of government websites related to water information, and collects information from the website through automated procceses, including downloading files and recording information from a site.
+Each program runs a Selenium driver and navigates to a variety of government websites related to water information, where it then collects information from the website through automated procceses. Each program is tailored to do a specific process for specific websites, such as downloading files and recording information from a site.
 
 At the top of every Python file (after the importing of packages) are various variables whose names are in all-caps. These variables are parameters, and they can be changed safely to change the behaviour of the program.
 
